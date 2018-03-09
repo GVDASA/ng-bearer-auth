@@ -1,4 +1,5 @@
-/// <reference path="../typings/index.d.ts" />
+/// <reference path="../typings/globals/angular/typings.json" />
+/// <reference path="../typings/globals/jquery/typings.json" />
 
 interface IAuthorizeOptions {
     username?: string;
@@ -328,26 +329,26 @@ class AuthService {
                         // return continueRequest()
                         continueRequest(this.access_token);
                     },
-                    // .falha((refreshRequestError)=>{
-                    (response: any) => {
-                        if (isBadRefreshToken(response)) {
-                            this.removeToken();
-                            // requestCredentials()
-                            this._requestCredentials()
-                                // deve resolver a promise para self-authorize
-                                .then(() => {
-                                    continueRequest(this.access_token);
-                                },
-                                // deve rejeitar a promise se não é possivel se auto-autorizar
-                                () => {
-                                    // Não tem solução então continua a request sem acrescentar o token
-                                    continueRequest();
-                                });
-                        } else {
-                            // pode ter sido erro de rede
-                            continueRequest();
-                        }
-                    });
+                        // .falha((refreshRequestError)=>{
+                        (response: any) => {
+                            if (isBadRefreshToken(response)) {
+                                this.removeToken();
+                                // requestCredentials()
+                                this._requestCredentials()
+                                    // deve resolver a promise para self-authorize
+                                    .then(() => {
+                                        continueRequest(this.access_token);
+                                    },
+                                        // deve rejeitar a promise se não é possivel se auto-autorizar
+                                        () => {
+                                            // Não tem solução então continua a request sem acrescentar o token
+                                            continueRequest();
+                                        });
+                            } else {
+                                // pode ter sido erro de rede
+                                continueRequest();
+                            }
+                        });
             } else {
                 // requestCredentials()
                 this._requestCredentials()
@@ -355,11 +356,11 @@ class AuthService {
                     .then(() => {
                         continueRequest(this.access_token);
                     },
-                    // deve rejeitar a promise se não é possivel se auto-autorizar
-                    () => {
-                        // Não tem solução então continua a request sem acrescentar o token
-                        continueRequest();
-                    });
+                        // deve rejeitar a promise se não é possivel se auto-autorizar
+                        () => {
+                            // Não tem solução então continua a request sem acrescentar o token
+                            continueRequest();
+                        });
             }
         }
         return deferred.promise;
@@ -427,6 +428,16 @@ class AuthFactory {
             };
         };
         return null;
+    }
+    removeConfig(name: string) {
+        if (typeof name !== 'string') {
+            throw 'Expected name to be a string! Found: ' + typeof name + '.';
+        }
+        var config = (<any>this.configs)[name];
+        if (config) {
+            (<any>this.configs)[name].removeToken();
+            delete (<any>this.configs)[name];
+        }
     }
 }
 

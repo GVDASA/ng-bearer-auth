@@ -29,6 +29,6 @@
     },
     "homepage": "https://github.com/eberlitz/ng-bearer-auth",
     "devDependencies": {
-        "typescript": "^1.7.5"
+        "typescript": "^1.8.10"
     }
 }

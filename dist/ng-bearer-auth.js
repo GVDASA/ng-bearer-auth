@@ -1,7 +1,7 @@
 function extend() {
     var args = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        args[_i - 0] = arguments[_i];
+        args[_i] = arguments[_i];
     }
     var dst = args[0];
     for (var i = 1, ii = arguments.length; i < ii; i++) {
@@ -297,6 +297,16 @@ var AuthFactory = (function () {
         }
         ;
         return null;
+    };
+    AuthFactory.prototype.removeConfig = function (name) {
+        if (typeof name !== 'string') {
+            throw 'Expected name to be a string! Found: ' + typeof name + '.';
+        }
+        var config = this.configs[name];
+        if (config) {
+            this.configs[name].removeToken();
+            delete this.configs[name];
+        }
     };
     AuthFactory.$inject = [
         '$$authService'
